@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:payflow/shared/themes/app_colors.dart';
+import 'package:payflow/shared/themes/app_images.dart';
 import 'package:payflow/shared/themes/app_text_styles.dart';
 
 void main() {
@@ -104,19 +105,29 @@ class _MyHomePageState extends State<MyHomePage> {
           // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
           // action in the IDE, or press "p" in the console), to see the
           // wireframe for each widget.
-          mainAxisAlignment: .center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            Text(
-              "Organize seus boletos em um só lugar",
-              style: AppTextStyles.headingLg.copyWith(
-                color: AppColors.heading,
-                height: 40,
-              ),
+            Column(
+              spacing: 8,
+              children: [
+                Text('You have pushed the button this many times:'),
+                Text(
+                  '$_counter',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+                Container(
+                  width: 300,
+                  child: Text(
+                    'Organize seus boletos em um só lugar',
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.headingLg.copyWith(
+                      color: AppColors.heading,
+                      height: 1.25,
+                    ),
+                  ),
+                ),
+                Image.asset(AppImages.googleLogo, height: 24, width: 25),
+              ],
             ),
           ],
         ),
