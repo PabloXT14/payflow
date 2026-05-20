@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:payflow/shared/themes/app_colors.dart';
+import 'package:payflow/shared/themes/app_text_styles.dart';
 
 void main() {
   runApp(const MyApp());
@@ -108,6 +110,13 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            Text(
+              "Organize seus boletos em um só lugar",
+              style: AppTextStyles.headingLg.copyWith(
+                color: AppColors.heading,
+                height: 40,
+              ),
             ),
           ],
         ),
