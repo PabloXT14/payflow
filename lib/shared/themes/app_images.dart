@@ -7,5 +7,5 @@ class AppImages {
   static const union = 'assets/images/union.png';
   static const person = 'assets/images/person.png';
 
-  static const googleLogo = 'assets/images/google-logo.png';
+  static const googleLogo = 'assets/images/google-logo.svg';
 }
