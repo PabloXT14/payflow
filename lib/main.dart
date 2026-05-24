@@ -1,30 +1,53 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:payflow/shared/themes/app_colors.dart';
+import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 
-import 'package:payflow/shared/themes/app_colors.dart';
+import 'package:payflow/app_widget.dart';
 
-import 'package:payflow/modules/home/home_page.dart';
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-void main() {
-  runApp(const AppWidget());
+  runApp(const AppFirebase());
 }
 
-class AppWidget extends StatelessWidget {
-  const AppWidget({super.key});
+class AppFirebase extends StatefulWidget {
+  const AppFirebase({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<AppFirebase> createState() => _AppFirebaseState();
+}
+
+class _AppFirebaseState extends State<AppFirebase> {
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Pay Flow',
-      theme: ThemeData(
-        primaryColor: AppColors.primary,
-        appBarTheme: AppBarTheme(
-          // elevation: 0, // Remove the shadow (opcional)
-          backgroundColor: AppColors.primary,
-        ),
-      ),
-      debugShowCheckedModeBanner: false,
-      home: HomePage(),
+    return FutureBuilder(
+      future: _initialization,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return MaterialApp(
+            home: Scaffold(
+              body: Center(child: Text('Erro ao inicializar o Firebase')),
+            ),
+          );
+        }
+
+        if (snapshot.connectionState == ConnectionState.done) {
+          return AppWidget();
+        }
+
+        return MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(color: AppColors.primary),
+            ),
+          ),
+        );
+      },
     );
   }
 }

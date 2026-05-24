@@ -15,3 +15,7 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+# Configuração do Firebase
+
+Para configurar o Firebase no seu projeto, siga os passos conforme a documentação do Flutter/Firebase. O link para a documentação pode ser encontrado [aqui](https://firebase.google.com/docs/flutter/setup).
