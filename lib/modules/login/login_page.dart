@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:payflow/services/auth_service.dart';
 
 import 'package:payflow/shared/themes/app_colors.dart';
 import 'package:payflow/shared/themes/app_images.dart';
@@ -13,6 +14,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  AuthService authService = AuthService();
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -66,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
                 padding: EdgeInsets.symmetric(horizontal: 40),
                 child: SocialLoginButton(
                   onTap: () {
-                    print("Login com Google");
+                    authService.signInWithGoogle();
                   },
                 ),
               ),
