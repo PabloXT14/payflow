@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:payflow/shared/auth/auth_controller.dart';
+import 'package:payflow/shared/models/user_model.dart';
 
 class LoginController {
-  AuthController authService = AuthController();
+  AuthController authController = AuthController();
 
   Future<void> googleSignIn(BuildContext context) async {
     try {
-      final response = await authService.signInWithGoogle();
-      authService.setUser(context, response);
+      final response = await authController.signInWithGoogle();
+
+      final user = UserModel(
+        name: response.displayName!,
+        email: response.email,
+        photoUrl: response.photoUrl!,
+      );
+
+      authController.setUser(context, user);
     } catch (error) {
-      authService.setUser(context, null);
+      authController.setUser(context, null);
 
       print('Erro ao fazer login com Google: $error');
 

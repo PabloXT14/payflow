@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:payflow/modules/home/home_page.dart';
-import 'package:payflow/modules/login/login_page.dart';
+import 'package:payflow/shared/models/user_model.dart';
 
 class AuthController {
   final _googleSignIn = GoogleSignIn.instance;
   bool _isGoogleSignInInitialized = false;
-  List<String> _scopes = ['email'];
+  final List<String> _scopes = ['email'];
 
-  var _isAuthenticated = false;
-  var _user;
+  UserModel? _user;
 
   Future<void> _initializeGoogleSignIn() async {
     try {
@@ -44,11 +43,12 @@ class AuthController {
     }
   }
 
-  get user => _user;
+  UserModel get user => _user!;
 
-  void setUser(BuildContext context, var user) {
+  void setUser(BuildContext context, UserModel? user) {
     if (user != null) {
-      _isAuthenticated = true;
+      storeUser(user);
+
       _user = user;
 
       Navigator.pushReplacementNamed(context, "/home");
@@ -56,9 +56,31 @@ class AuthController {
       return;
     }
 
-    _isAuthenticated = false;
     _user = null;
 
     Navigator.pushReplacementNamed(context, "/login");
+  }
+
+  Future<void> storeUser(UserModel user) async {
+    final instance = await SharedPreferences.getInstance();
+
+    await instance.setString("user", user.toJson());
+
+    return;
+  }
+
+  Future<void> getStoredUser(BuildContext context) async {
+    final instance = await SharedPreferences.getInstance();
+
+    if (!instance.containsKey("user")) {
+      setUser(context, null);
+      return;
+    }
+
+    final json = instance.getString("user") as String;
+
+    setUser(context, UserModel.fromJson(json));
+
+    return;
   }
 }
