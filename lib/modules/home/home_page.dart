@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:payflow/shared/themes/app_colors.dart';
 import 'package:payflow/shared/themes/app_text_styles.dart';
 
+import 'package:payflow/modules/home/home_controller.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -11,6 +13,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final controller = HomeController();
+  final pages = [
+    Container(color: Colors.red),
+    Container(color: Colors.green),
+    Container(color: Colors.blue),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,6 +61,66 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
+        ),
+      ),
+      extendBody: true,
+      body: pages[controller.currentPageIndex],
+      bottomNavigationBar: Container(
+        height: 149,
+
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.bottomCenter,
+            end: Alignment.topCenter,
+            colors: [
+              AppColors.background,
+              AppColors.background.withValues(alpha: 0.5),
+              AppColors.background.withValues(alpha: 0.0),
+            ],
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 56,
+          children: [
+            IconButton(
+              onPressed: () {
+                controller.changePage(0);
+                setState(() {});
+              },
+              icon: Icon(Icons.home, size: 24, color: AppColors.primary),
+            ),
+            GestureDetector(
+              onTap: () {
+                controller.changePage(1);
+                setState(() {});
+              },
+              child: Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Icon(
+                  Icons.add_box_outlined,
+                  size: 24,
+                  color: AppColors.white,
+                ),
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                controller.changePage(2);
+                setState(() {});
+              },
+              icon: Icon(
+                Icons.description_outlined,
+                size: 24,
+                color: AppColors.body,
+              ),
+            ),
+          ],
         ),
       ),
     );
