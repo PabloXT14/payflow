@@ -11,7 +11,7 @@ class SplashPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final authController = AuthController();
 
-    Future.delayed(const Duration(seconds: 2)).then((_) {
+    Future.delayed(Duration(seconds: 2)).then((_) {
       authController.getStoredUser(context);
     });
 

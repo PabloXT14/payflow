@@ -43,7 +43,7 @@ class AuthController {
     }
   }
 
-  UserModel get user => _user!;
+  UserModel? get user => _user;
 
   void setUser(BuildContext context, UserModel? user) {
     if (user != null) {

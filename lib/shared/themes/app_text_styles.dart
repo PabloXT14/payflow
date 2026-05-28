@@ -14,6 +14,11 @@ class AppTextStyles {
     fontWeight: FontWeight.w600,
   );
 
+  static final headingMdRegular = GoogleFonts.lexend(
+    fontSize: 20,
+    fontWeight: FontWeight.w400,
+  );
+
   static final textLg = GoogleFonts.inter(
     fontSize: 17,
     fontWeight: FontWeight.w600,
