@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:payflow/shared/themes/app_colors.dart';
 import 'package:payflow/shared/themes/app_text_styles.dart';
+import 'package:payflow/shared/widgets/divider/divider_vertical.dart';
 import 'package:payflow/shared/widgets/label_button/label_button.dart';
 
 class BarcodeScannerPage extends StatefulWidget {
@@ -30,18 +31,25 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
           Expanded(child: Container(color: AppColors.black)),
         ],
       ),
-      bottomNavigationBar: Row(
-        children: [
-          Expanded(
-            child: LabelButton(
-              label: 'Inserir código do boleto',
-              onPressed: () {},
+      bottomNavigationBar: Container(
+        height: 56,
+        child: Row(
+          children: [
+            Expanded(
+              child: LabelButton(
+                label: 'Inserir código do boleto',
+                onPressed: () {},
+              ),
             ),
-          ),
-          Expanded(
-            child: LabelButton(label: 'Adicionar da galeria', onPressed: () {}),
-          ),
-        ],
+            DividerVertical(),
+            Expanded(
+              child: LabelButton(
+                label: 'Adicionar da galeria',
+                onPressed: () {},
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
