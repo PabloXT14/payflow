@@ -29,6 +29,11 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
   );
 
+  static final textMdBold = GoogleFonts.inter(
+    fontSize: 15,
+    fontWeight: FontWeight.w600,
+  );
+
   static final textSm = GoogleFonts.inter(
     fontSize: 13,
     fontWeight: FontWeight.w400,
