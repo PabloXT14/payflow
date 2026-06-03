@@ -7,6 +7,7 @@ import 'package:payflow/modules/splash/splash_page.dart';
 import 'package:payflow/modules/login/login_page.dart';
 import 'package:payflow/modules/home/home_page.dart';
 import 'package:payflow/modules/barcode_scanner/barcode_scanner_page.dart';
+import 'package:payflow/modules/insert_boleto/insert_boleto_page.dart';
 
 class AppWidget extends StatelessWidget {
   AppWidget({super.key}) {
@@ -36,6 +37,7 @@ class AppWidget extends StatelessWidget {
         '/login': (context) => LoginPage(),
         '/home': (context) => HomePage(),
         '/barcode_scanner': (context) => BarcodeScannerPage(),
+        '/insert_boleto': (context) => InsertBoletoPage(),
       },
     );
   }
