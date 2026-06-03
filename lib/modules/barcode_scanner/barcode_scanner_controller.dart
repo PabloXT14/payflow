@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -18,7 +20,18 @@ class BarcodeScannerController {
 
   final barcodeScanner = BarcodeScanner();
 
+  // ✅ Guards para evitar processamento simultâneo
+  bool _isProcessing = false;
+  bool _disposed = false;
+  Timer? _timeoutTimer;
+
   void getAvailableCameras() async {
+    // ✅ Limpa estado anterior completamente antes de reiniciar
+    _cancelTimeout();
+    _isProcessing = false;
+
+    await _disposeCameraController();
+
     // Lógica para obter as câmeras disponíveis
     try {
       final response = await availableCameras();
@@ -29,118 +42,163 @@ class BarcodeScannerController {
 
       final cameraController = CameraController(
         camera,
-        ResolutionPreset.max,
+        ResolutionPreset.high,
         enableAudio: false,
+        imageFormatGroup: ImageFormatGroup.nv21,
       );
 
       await cameraController.initialize();
 
+      if (_disposed) {
+        await cameraController.dispose();
+        return;
+      }
+
       status = BarcodeScannerStatus.available(cameraController);
 
-      scanWithCamera();
+      _startTimeout();
+      _listenCamera();
     } catch (error) {
-      status = BarcodeScannerStatus.error(error.toString());
+      if (!_disposed) {
+        status = BarcodeScannerStatus.error(error.toString());
+      }
     }
   }
 
-  void scanWithCamera() {
-    Future.delayed(Duration(seconds: 10)).then((value) {
-      if (status.cameraController != null &&
-          status.cameraController!.value.isStreamingImages) {
-        status.cameraController!
-            .stopImageStream(); // Parar o streaming de imagens para evitar processamento contínuo
+  // ✅ Timeout gerenciado com Timer cancelável
+  void _startTimeout() {
+    _cancelTimeout();
+    _timeoutTimer = Timer(Duration(seconds: 15), () {
+      if (!_disposed && status.barcode.isEmpty) {
+        _stopStream();
+        status = BarcodeScannerStatus.error(
+          'Tempo esgotado para leitura do código de barras. Tente novamente.',
+        );
       }
-
-      status = BarcodeScannerStatus.error(
-        'Tempo esgotado para leitura do código de barras. Tente novamente.',
-      );
     });
+  }
 
-    listenCamera();
+  void _cancelTimeout() {
+    _timeoutTimer?.cancel();
+    _timeoutTimer = null;
   }
 
   void scanWithImagePicker() async {
-    await status.cameraController?.stopImageStream();
+    _cancelTimeout();
+    await _stopStream();
 
     final response = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (response == null) return;
 
-    final inputImage = InputImage.fromFilePath(response!.path);
+    final inputImage = InputImage.fromFilePath(response.path);
 
-    scannerBarcode(inputImage);
+    await _scannerBarcode(inputImage);
   }
 
-  Future<void> scannerBarcode(InputImage inputImage) async {
+  Future<void> _scannerBarcode(InputImage inputImage) async {
+    // ✅ Evita processamento paralelo
+    if (_isProcessing || _disposed) return;
+    _isProcessing = true;
+
     try {
-      if (status.cameraController != null &&
-          status.cameraController!.value.isStreamingImages) {
-        status.cameraController!
-            .stopImageStream(); // Parar o streaming de imagens para evitar processamento contínuo
-      }
+      await _stopStream();
 
       final barcodes = await barcodeScanner.processImage(inputImage);
 
-      var barcode;
-
+      String? barcode;
       for (Barcode item in barcodes) {
         barcode = item.displayValue; // Obter o valor do código de barras
       }
 
-      if (barcode != null && status.barcode.isEmpty) {
-        status = BarcodeScannerStatus.barcode(barcode);
-        status.cameraController?.dispose(); // Liberar os recursos da câmera
-      } else {
-        getAvailableCameras(); // Reiniciar a câmera para tentar novamente
-      }
+      if (_disposed) return;
 
-      return;
+      if (barcode != null && barcode.isNotEmpty) {
+        _cancelTimeout();
+
+        await _disposeCameraController();
+
+        status = BarcodeScannerStatus.barcode(barcode);
+
+        print("CÓDIGO LIDO: $barcode");
+      } else {
+        // ✅ Reinicia apenas o stream, não toda a câmera
+        _isProcessing = false;
+        _listenCamera();
+      }
     } catch (error) {
-      status = BarcodeScannerStatus.error(error.toString());
+      if (!_disposed) {
+        status = BarcodeScannerStatus.error(error.toString());
+      }
+    } finally {
+      // ✅ Garante reset do flag mesmo em caso de exceção inesperada
+      if (status.barcode.isEmpty && !_disposed) {
+        _isProcessing = false;
+      }
     }
   }
 
-  void listenCamera() {
-    if (status.cameraController!.value.isStreamingImages == false) {
-      status.cameraController!.startImageStream((cameraImage) async {
-        // Lógica para processar a imagem da câmera e prepará-la para o scanner de código de barras
-        try {
-          final WriteBuffer allBytes = WriteBuffer();
+  Future<void> _stopStream() async {
+    try {
+      if (status.cameraController != null &&
+          status.cameraController!.value.isInitialized &&
+          status.cameraController!.value.isStreamingImages) {
+        await status.cameraController!.stopImageStream();
+      }
+    } catch (_) {}
+  }
 
-          for (Plane plane in cameraImage.planes) {
-            allBytes.putUint8List(plane.bytes);
-          }
+  Future<void> _disposeCameraController() async {
+    try {
+      await _stopStream();
+      await status.cameraController?.dispose();
+    } catch (_) {}
+  }
 
-          final bytes = allBytes.done().buffer.asUint8List();
+  void _listenCamera() {
+    if (_disposed) return;
 
-          final Size imageSize = Size(
+    final controller = status.cameraController;
+    if (controller == null || !controller.value.isInitialized) return;
+    if (controller.value.isStreamingImages) return;
+
+    controller.startImageStream((cameraImage) async {
+      // ✅ Descarta frames enquanto já está processando
+      if (_isProcessing || _disposed) return;
+
+      try {
+        final WriteBuffer allBytes = WriteBuffer();
+        for (Plane plane in cameraImage.planes) {
+          allBytes.putUint8List(plane.bytes);
+        }
+
+        final bytes = allBytes.done().buffer.asUint8List();
+
+        final inputImageData = InputImageMetadata(
+          size: Size(
             cameraImage.width.toDouble(),
             cameraImage.height.toDouble(),
-          );
+          ),
+          rotation: InputImageRotation.rotation0deg,
+          format: InputImageFormat.nv21,
+          bytesPerRow: cameraImage.planes.first.bytesPerRow,
+        );
 
-          final InputImageRotation imageRotation =
-              InputImageRotation.rotation0deg;
+        final inputImage = InputImage.fromBytes(
+          bytes: bytes,
+          metadata: inputImageData,
+        );
 
-          // Some platforms may not provide a mapping helper; default to nv21
-          final InputImageFormat inputImageFormat = InputImageFormat.nv21;
+        // ✅ Sem Future.delayed aqui — o _isProcessing já evita sobrecarga
+        await _scannerBarcode(inputImage);
+      } catch (_) {}
+    });
+  }
 
-          final inputImageData = InputImageMetadata(
-            size: imageSize,
-            rotation: imageRotation,
-            format: inputImageFormat,
-            bytesPerRow: cameraImage.planes.first.bytesPerRow,
-          );
-
-          final inputImageCamera = InputImage.fromBytes(
-            bytes: bytes,
-            metadata: inputImageData,
-          );
-
-          await Future.delayed(Duration(seconds: 3));
-
-          await scannerBarcode(inputImageCamera);
-        } catch (error) {
-          status = BarcodeScannerStatus.error(error.toString());
-        }
-      });
-    }
+  void dispose() {
+    _disposed = true;
+    _cancelTimeout();
+    statusNotifier.dispose();
+    barcodeScanner.close();
+    _disposeCameraController();
   }
 }
