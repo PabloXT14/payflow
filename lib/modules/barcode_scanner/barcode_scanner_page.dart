@@ -23,22 +23,24 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
 
     controller.getAvailableCameras();
 
-    controller.statusNotifier.addListener(() {
-      if (controller.status.hasBarcode) {
-        // ✅ Garante que o widget ainda está montado antes de navegar
-        if (!mounted) return;
+    controller.statusNotifier.addListener(_onStatusChange);
+  }
 
-        Navigator.pushReplacementNamed(
-          context,
-          "/insert_boleto",
-          arguments: controller.status.barcode,
-        );
-      }
-    });
+  void _onStatusChange() {
+    if (!mounted) return;
+
+    if (controller.status.hasBarcode) {
+      Navigator.pushReplacementNamed(
+        context,
+        "/insert_boleto",
+        arguments: controller.status.barcode,
+      );
+    }
   }
 
   @override
   void dispose() {
+    controller.statusNotifier.removeListener(_onStatusChange);
     controller.dispose();
     super.dispose();
   }
@@ -48,6 +50,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
     return SafeArea(
       child: Stack(
         children: [
+          // Preview da câmera (fundo)
           ValueListenableBuilder<BarcodeScannerStatus>(
             valueListenable: controller.statusNotifier,
             builder: (_, status, _) {
@@ -60,6 +63,8 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
               }
             },
           ),
+
+          // UI sobreposta (rotacionada 90°)
           RotatedBox(
             quarterTurns: 1, // Gira a tela em 90 graus no sentido horário
             child: Scaffold(
@@ -85,12 +90,18 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
               ),
               bottomNavigationBar: SetLabelButtons(
                 primaryLabel: "Inserir código do boleto ",
-                primaryOnPressed: () {},
+                primaryOnPressed: () {
+                  Navigator.pushNamed(context, "/insert_boleto");
+                },
                 secondaryLabel: "Adicionar da galeria",
-                secondaryOnPressed: () {},
+                secondaryOnPressed: () {
+                  controller.scanWithImagePicker();
+                },
               ),
             ),
           ),
+
+          // Bottom sheet de erro
           ValueListenableBuilder<BarcodeScannerStatus>(
             valueListenable: controller.statusNotifier,
             builder: (_, status, _) {
@@ -100,11 +111,11 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
                   subtitle:
                       "Tente escanear novamente ou digite o código do seu boleto.",
                   primaryLabel: "Escaneie novamente",
-                  primaryOnPressed: () {
-                    controller.getAvailableCameras();
-                  },
+                  primaryOnPressed: controller.getAvailableCameras,
                   secondaryLabel: "Digitar código",
-                  secondaryOnPressed: () {},
+                  secondaryOnPressed: () {
+                    Navigator.pushNamed(context, "/insert_boleto");
+                  },
                 );
               } else {
                 return Container();

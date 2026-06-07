@@ -1,34 +1,36 @@
 import 'package:camera/camera.dart';
 
+enum ScannerState { idle, cameraAvailable, barcode, error }
+
 class BarcodeScannerStatus {
-  final bool isCameraAvailable;
-  final String error;
+  final ScannerState state;
+  final CameraController? cameraController;
   final String barcode;
+  final String error;
 
-  CameraController? cameraController;
-
-  BarcodeScannerStatus({
-    this.isCameraAvailable = false,
+  const BarcodeScannerStatus._({
+    required this.state,
     this.cameraController,
-    this.error = '',
     this.barcode = '',
+    this.error = '',
   });
 
-  factory BarcodeScannerStatus.available(CameraController cameraController) =>
-      BarcodeScannerStatus(
-        isCameraAvailable: true,
+  // Factory constructors for different states
+  const BarcodeScannerStatus.idle() : this._(state: ScannerState.idle);
+
+  const BarcodeScannerStatus.available(CameraController cameraController)
+    : this._(
+        state: ScannerState.cameraAvailable,
         cameraController: cameraController,
       );
 
-  factory BarcodeScannerStatus.error(String errorMessage) =>
-      BarcodeScannerStatus(error: errorMessage);
+  const BarcodeScannerStatus.barcode(String value)
+    : this._(state: ScannerState.barcode, barcode: value);
 
-  factory BarcodeScannerStatus.barcode(String barcode) =>
-      BarcodeScannerStatus(barcode: barcode);
+  const BarcodeScannerStatus.error(String message)
+    : this._(state: ScannerState.error, error: message);
 
-  bool get showCamera => isCameraAvailable && error.isEmpty;
-
-  bool get hasError => error.isNotEmpty;
-
-  bool get hasBarcode => barcode.isNotEmpty;
+  bool get showCamera => state == ScannerState.cameraAvailable;
+  bool get hasBarcode => state == ScannerState.barcode;
+  bool get hasError => state == ScannerState.error;
 }
