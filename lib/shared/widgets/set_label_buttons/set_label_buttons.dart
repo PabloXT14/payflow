@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:payflow/shared/themes/app_colors.dart';
 
-import 'package:payflow/shared/widgets/divider/divider_vertical.dart';
 import 'package:payflow/shared/widgets/label_button/label_button.dart';
 
 class SetLabelButtons extends StatelessWidget {
@@ -12,6 +11,9 @@ class SetLabelButtons extends StatelessWidget {
   final VoidCallback secondaryOnPressed;
 
   final bool enablePrimaryColor;
+  final bool enableSecondaryColor;
+
+  final Color? backgroundColor;
 
   const SetLabelButtons({
     super.key,
@@ -20,14 +22,18 @@ class SetLabelButtons extends StatelessWidget {
     required this.secondaryLabel,
     required this.secondaryOnPressed,
     this.enablePrimaryColor = false,
+    this.enableSecondaryColor = false,
+    this.backgroundColor,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 56,
+
       decoration: BoxDecoration(
         border: Border(top: BorderSide(color: AppColors.stroke)),
+        color: backgroundColor ?? AppColors.box,
       ),
       child: Row(
         children: [
@@ -40,11 +46,14 @@ class SetLabelButtons extends StatelessWidget {
                   : null,
             ),
           ),
-          DividerVertical(),
+          VerticalDivider(color: AppColors.stroke, width: 1, thickness: 1),
           Expanded(
             child: LabelButton(
               label: secondaryLabel,
               onPressed: secondaryOnPressed,
+              textStyle: enableSecondaryColor
+                  ? TextStyle(color: AppColors.primary)
+                  : null,
             ),
           ),
         ],

@@ -7,12 +7,14 @@ class LabelButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
   final TextStyle? textStyle;
+  final ButtonStyle? buttonStyle;
 
   const LabelButton({
     super.key,
     required this.label,
     this.onPressed,
     this.textStyle,
+    this.buttonStyle,
   });
 
   @override
@@ -21,12 +23,11 @@ class LabelButton extends StatelessWidget {
       height: 56,
       child: TextButton(
         style: ButtonStyle(
-          backgroundColor: WidgetStatePropertyAll(AppColors.box),
           shape: WidgetStatePropertyAll(LinearBorder()),
           overlayColor: WidgetStatePropertyAll(
             AppColors.primary.withValues(alpha: 0.3),
           ),
-        ),
+        ).merge(buttonStyle),
         onPressed: onPressed,
         child: Text(
           label,
