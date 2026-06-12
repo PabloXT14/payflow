@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:payflow/shared/themes/app_colors.dart';
 import 'package:payflow/shared/themes/app_text_styles.dart';
@@ -9,6 +10,8 @@ class InputText extends StatefulWidget {
   final String? initialValue;
   final String? Function(String?)? validator;
   final TextEditingController? controller;
+  final List<TextInputFormatter>? inputFormatters;
+  final TextInputType keyboardType;
   final void Function(String value) onChanged;
 
   const InputText({
@@ -20,6 +23,8 @@ class InputText extends StatefulWidget {
     this.initialValue,
     this.validator,
     this.controller,
+    this.inputFormatters,
+    this.keyboardType = TextInputType.text,
   });
 
   @override
@@ -75,6 +80,8 @@ class _InputTextState extends State<InputText> {
               initialValue: widget.initialValue,
               validator: widget.validator,
               controller: widget.controller,
+              inputFormatters: widget.inputFormatters,
+              keyboardType: widget.keyboardType,
               onChanged: widget.onChanged,
 
               decoration: InputDecoration(

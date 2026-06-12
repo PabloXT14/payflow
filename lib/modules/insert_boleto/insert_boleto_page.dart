@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 import 'package:payflow/shared/themes/app_colors.dart';
 import 'package:payflow/shared/themes/app_text_styles.dart';
@@ -16,12 +18,36 @@ class InsertBoletoPage extends StatefulWidget {
 class _InsertBoletoPageState extends State<InsertBoletoPage> {
   String? barcode;
 
+  final moneyInputTextFormatter = CurrencyTextInputFormatter.currency(
+    locale: "pt_BR",
+    symbol: "R\$",
+    decimalDigits: 2,
+  );
+
+  final dueDateInputTextFormatter = MaskTextInputFormatter(
+    mask: "##/##/####",
+    filter: {"#": RegExp(r'[0-9]')},
+    type: MaskAutoCompletionType.lazy,
+  );
+
+  final barcodeTextInputController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
     // ✅ Lê o argumento passado pelo Navigator
     barcode = ModalRoute.of(context)?.settings.arguments as String?;
+
+    // ✅ Se o argumento existir, preenche o campo de código de barras
+    if (barcode != null) {
+      barcodeTextInputController.text = barcode!;
+    }
   }
 
   @override
@@ -73,6 +99,8 @@ class _InsertBoletoPageState extends State<InsertBoletoPage> {
                     },
                   ),
                   InputText(
+                    keyboardType: TextInputType.datetime,
+                    inputFormatters: [dueDateInputTextFormatter],
                     hint: "Vencimento",
                     icon: FaIcon(
                       FontAwesomeIcons.circleXmark,
@@ -85,6 +113,8 @@ class _InsertBoletoPageState extends State<InsertBoletoPage> {
                     },
                   ),
                   InputText(
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [moneyInputTextFormatter],
                     hint: "Valor",
                     icon: FaIcon(
                       FontAwesomeIcons.wallet,
@@ -97,6 +127,7 @@ class _InsertBoletoPageState extends State<InsertBoletoPage> {
                     },
                   ),
                   InputText(
+                    controller: barcodeTextInputController,
                     hint: "Código",
                     icon: FaIcon(
                       FontAwesomeIcons.barcode,
@@ -112,7 +143,6 @@ class _InsertBoletoPageState extends State<InsertBoletoPage> {
               ),
             ),
           ),
-          // BUTTONS
         ],
       ),
       bottomNavigationBar: SetLabelButtons(
