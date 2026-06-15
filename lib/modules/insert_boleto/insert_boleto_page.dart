@@ -3,6 +3,8 @@ import 'package:currency_text_input_formatter/currency_text_input_formatter.dart
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
+import 'package:payflow/modules/insert_boleto/insert_boleto_controller.dart';
+
 import 'package:payflow/shared/themes/app_colors.dart';
 import 'package:payflow/shared/themes/app_text_styles.dart';
 import 'package:payflow/shared/widgets/input_text/input_text.dart';
@@ -17,6 +19,8 @@ class InsertBoletoPage extends StatefulWidget {
 
 class _InsertBoletoPageState extends State<InsertBoletoPage> {
   String? barcode;
+
+  final controller = InsertBoletoController();
 
   final moneyInputTextFormatter = CurrencyTextInputFormatter.currency(
     locale: "pt_BR",
@@ -59,30 +63,31 @@ class _InsertBoletoPageState extends State<InsertBoletoPage> {
         elevation: 0,
         leading: BackButton(color: AppColors.input),
       ),
-      body: Column(
-        children: [
-          // TITLE
-          Center(
-            child: Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.only(bottom: 24),
-              width: 216,
-              child: Text(
-                "Preencha os dados do boleto",
-                textAlign: TextAlign.center,
-                style: AppTextStyles.headingMd.copyWith(
-                  color: AppColors.heading,
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+
+        child: Column(
+          children: [
+            // TITLE
+            Center(
+              child: Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.only(bottom: 24),
+                width: 216,
+                child: Text(
+                  "Preencha os dados do boleto",
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.headingMd.copyWith(
+                    color: AppColors.heading,
+                  ),
                 ),
               ),
             ),
-          ),
-          // INPUTS
-          Expanded(
-            flex: 1,
-            child: Container(
-              width: double.maxFinite,
-              height: double.maxFinite,
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+
+            // INPUTS
+            Form(
+              key: controller.formKey,
+              autovalidateMode: AutovalidateMode.onUserInteractionIfError,
               child: Column(
                 spacing: 16,
                 children: [
@@ -93,11 +98,12 @@ class _InsertBoletoPageState extends State<InsertBoletoPage> {
                       size: 24,
                       color: AppColors.primary,
                     ),
+                    validator: controller.validateName,
                     onChanged: (value) {
-                      // ✅ Exemplo de como capturar o valor do input
-                      print("Nome do boleto: $value");
+                      controller.onChange(name: value);
                     },
                   ),
+
                   InputText(
                     keyboardType: TextInputType.datetime,
                     inputFormatters: [dueDateInputTextFormatter],
@@ -107,9 +113,9 @@ class _InsertBoletoPageState extends State<InsertBoletoPage> {
                       size: 24,
                       color: AppColors.primary,
                     ),
+                    validator: controller.validateDueDate,
                     onChanged: (value) {
-                      // ✅ Exemplo de como capturar o valor do input
-                      print("Vencimento: $value");
+                      controller.onChange(dueDate: value);
                     },
                   ),
                   InputText(
@@ -121,9 +127,15 @@ class _InsertBoletoPageState extends State<InsertBoletoPage> {
                       size: 24,
                       color: AppColors.primary,
                     ),
+                    validator: (value) => controller.validateValue(
+                      moneyInputTextFormatter.getUnformattedValue().toDouble(),
+                    ),
                     onChanged: (value) {
-                      // ✅ Exemplo de como capturar o valor do input
-                      print("Valor: $value");
+                      controller.onChange(
+                        value: moneyInputTextFormatter
+                            .getUnformattedValue()
+                            .toDouble(),
+                      );
                     },
                   ),
                   InputText(
@@ -134,16 +146,16 @@ class _InsertBoletoPageState extends State<InsertBoletoPage> {
                       size: 24,
                       color: AppColors.primary,
                     ),
+                    validator: controller.validateBarcode,
                     onChanged: (value) {
-                      // ✅ Exemplo de como capturar o valor do input
-                      print("Código: $value");
+                      controller.onChange(barcode: value);
                     },
                   ),
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       bottomNavigationBar: SetLabelButtons(
         backgroundColor: AppColors.background,
@@ -152,7 +164,9 @@ class _InsertBoletoPageState extends State<InsertBoletoPage> {
           Navigator.pop(context);
         },
         secondaryLabel: "Cadastrar",
-        secondaryOnPressed: () {},
+        secondaryOnPressed: () {
+          controller.registerBoleto();
+        },
         enableSecondaryColor: true,
       ),
     );
