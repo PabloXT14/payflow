@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'package:payflow/shared/models/boleto_model.dart';
+
 class InsertBoletoController {
   final formKey = GlobalKey<FormState>();
+  BoletoModel boletoModel = BoletoModel();
 
   String? validateName(String? value) {
     if (value == null || value.isEmpty) {
@@ -43,7 +46,12 @@ class InsertBoletoController {
     double? value,
     String? barcode,
   }) {
-    // formKey.currentState?.validate();
+    boletoModel = boletoModel.copyWith(
+      name: name,
+      dueDate: dueDate,
+      value: value,
+      barcode: barcode,
+    );
   }
 
   void registerBoleto() {
