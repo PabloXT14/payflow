@@ -19,7 +19,17 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
   );
 
+  static final headingSm = GoogleFonts.lexend(
+    fontSize: 17,
+    fontWeight: FontWeight.w600,
+  );
+
   static final textLg = GoogleFonts.inter(
+    fontSize: 17,
+    fontWeight: FontWeight.w400,
+  );
+
+  static final textLgSemiBold = GoogleFonts.inter(
     fontSize: 17,
     fontWeight: FontWeight.w600,
   );
