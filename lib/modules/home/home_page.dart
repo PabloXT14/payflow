@@ -17,6 +17,13 @@ class _HomePageState extends State<HomePage> {
   final pages = [Container(color: Colors.red), Container(color: Colors.blue)];
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    controller.loadBoletosFromStorage();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(

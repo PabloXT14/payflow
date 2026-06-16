@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:payflow/shared/models/boleto_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class InsertBoletoController {
   final formKey = GlobalKey<FormState>();
@@ -54,13 +55,23 @@ class InsertBoletoController {
     );
   }
 
-  void registerBoleto() {
+  Future<void> saveBoletoOnStorage() async {
+    final instance = await SharedPreferences.getInstance();
+
+    final boletos = instance.getStringList('boletos') ?? [];
+
+    boletos.add(boletoModel.toJson());
+
+    await instance.setStringList('boletos', boletos);
+
+    return;
+  }
+
+  Future<void> onSubmit() async {
     final form = formKey.currentState;
 
     if (form != null && form.validate()) {
-      // ✅ Aqui você pode implementar a lógica para registrar o boleto
-      // Por exemplo, salvar os dados em um banco de dados ou chamar uma API
-      print('Boleto registrado com sucesso!');
+      await saveBoletoOnStorage();
     } else {
       print('Formulário inválido. Verifique os campos e tente novamente.');
     }
