@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:payflow/modules/my_boletos/my_boletos_page.dart';
 
 import 'package:payflow/shared/themes/app_colors.dart';
 import 'package:payflow/shared/themes/app_text_styles.dart';
 
 import 'package:payflow/modules/home/home_controller.dart';
-import 'package:payflow/shared/widgets/boleto_list/boleto_list.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,7 +15,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final controller = HomeController();
-  final pages = [Container(child: BoletoList()), Container(color: Colors.blue)];
+  final pages = [MyBoletosPage(), Container(color: Colors.blue)];
 
   @override
   void didChangeDependencies() {
@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(184),
         child: Container(
-          height: 184,
+          height: 152,
           color: AppColors.primary,
           child: Padding(
             padding: EdgeInsets.only(left: 24, top: 48, right: 24),

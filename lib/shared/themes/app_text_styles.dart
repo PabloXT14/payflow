@@ -48,4 +48,9 @@ class AppTextStyles {
     fontSize: 13,
     fontWeight: FontWeight.w400,
   );
+
+  static final textSmBold = GoogleFonts.inter(
+    fontSize: 13,
+    fontWeight: FontWeight.w600,
+  );
 }
