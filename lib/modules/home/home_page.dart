@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:payflow/modules/my_boletos/my_boletos_page.dart';
+import 'package:payflow/modules/extract/extract_page.dart';
 
 import 'package:payflow/shared/themes/app_colors.dart';
 import 'package:payflow/shared/themes/app_text_styles.dart';
@@ -15,7 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final controller = HomeController();
-  final pages = [MyBoletosPage(), Container(color: Colors.blue)];
+  final pages = [MyBoletosPage(), ExtractPage()];
 
   @override
   void didChangeDependencies() {
@@ -92,7 +93,13 @@ class _HomePageState extends State<HomePage> {
                 controller.changePage(0);
                 setState(() {});
               },
-              icon: Icon(Icons.home, size: 24, color: AppColors.primary),
+              icon: Icon(
+                Icons.home,
+                size: 24,
+                color: controller.currentPageIndex == 0
+                    ? AppColors.primary
+                    : AppColors.body,
+              ),
             ),
             GestureDetector(
               onTap: () {
@@ -121,7 +128,9 @@ class _HomePageState extends State<HomePage> {
               icon: Icon(
                 Icons.description_outlined,
                 size: 24,
-                color: AppColors.body,
+                color: controller.currentPageIndex == 1
+                    ? AppColors.primary
+                    : AppColors.body,
               ),
             ),
           ],
