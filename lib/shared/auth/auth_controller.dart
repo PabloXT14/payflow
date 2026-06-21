@@ -51,7 +51,7 @@ class AuthController {
 
       _user = user;
 
-      Navigator.pushReplacementNamed(context, "/home");
+      Navigator.pushReplacementNamed(context, "/home", arguments: user);
 
       return;
     }

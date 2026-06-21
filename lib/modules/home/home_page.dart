@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:payflow/modules/my_boletos/my_boletos_page.dart';
 import 'package:payflow/modules/extract/extract_page.dart';
+import 'package:payflow/shared/models/user_model.dart';
 
 import 'package:payflow/shared/themes/app_colors.dart';
 import 'package:payflow/shared/themes/app_text_styles.dart';
@@ -8,7 +9,9 @@ import 'package:payflow/shared/themes/app_text_styles.dart';
 import 'package:payflow/modules/home/home_controller.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final UserModel user;
+
+  const HomePage({super.key, required this.user});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -44,7 +47,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   children: [
                     TextSpan(
-                      text: "John",
+                      text: widget.user.name,
                       style: AppTextStyles.headingMd.copyWith(
                         color: AppColors.white,
                       ),
@@ -62,6 +65,9 @@ class _HomePageState extends State<HomePage> {
                 decoration: BoxDecoration(
                   color: AppColors.background,
                   borderRadius: BorderRadius.circular(5),
+                  image: DecorationImage(
+                    image: NetworkImage(widget.user.photoUrl ?? ""),
+                  ),
                 ),
               ),
             ),

@@ -11,15 +11,15 @@ import 'package:payflow/shared/widgets/input_text/input_text.dart';
 import 'package:payflow/shared/widgets/set_label_buttons/set_label_buttons.dart';
 
 class InsertBoletoPage extends StatefulWidget {
-  const InsertBoletoPage({super.key});
+  final String? barcode;
+
+  const InsertBoletoPage({super.key, this.barcode});
 
   @override
   State<InsertBoletoPage> createState() => _InsertBoletoPageState();
 }
 
 class _InsertBoletoPageState extends State<InsertBoletoPage> {
-  String? barcode;
-
   final controller = InsertBoletoController();
 
   final moneyInputTextFormatter = CurrencyTextInputFormatter.currency(
@@ -46,11 +46,11 @@ class _InsertBoletoPageState extends State<InsertBoletoPage> {
     super.didChangeDependencies();
 
     // ✅ Lê o argumento passado pelo Navigator
-    barcode = ModalRoute.of(context)?.settings.arguments as String?;
+    // barcode = ModalRoute.of(context)?.settings.arguments as String?;
 
     // ✅ Se o argumento existir, preenche o campo de código de barras
-    if (barcode != null) {
-      barcodeTextInputController.text = barcode!;
+    if (widget.barcode != null) {
+      barcodeTextInputController.text = widget.barcode!;
     }
   }
 
