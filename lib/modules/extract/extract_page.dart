@@ -17,47 +17,51 @@ class _ExtractPageState extends State<ExtractPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppColors.background,
-      child: Column(
-        children: [
-          // MEUS BOLETOS
-          Container(
-            padding: const EdgeInsets.only(left: 24, right: 24, top: 24),
+    return SingleChildScrollView(
+      child: Container(
+        padding: const EdgeInsets.only(bottom: 128),
+        color: AppColors.background,
 
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 24,
+        child: Column(
+          children: [
+            // MEUS EXTRATOS
+            Container(
+              padding: const EdgeInsets.only(left: 24, right: 24, top: 24),
 
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Meus extratos",
-                      style: AppTextStyles.headingMd.copyWith(
-                        color: AppColors.heading,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 24,
+
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Meus extratos",
+                        style: AppTextStyles.headingMd.copyWith(
+                          color: AppColors.heading,
+                        ),
                       ),
-                    ),
-                    Text(
-                      "3 pagos",
-                      style: AppTextStyles.textSm.copyWith(
-                        color: AppColors.body,
+                      Text(
+                        "3 pagos",
+                        style: AppTextStyles.textSm.copyWith(
+                          color: AppColors.body,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                Divider(height: 1, color: AppColors.stroke, thickness: 1),
-                ValueListenableBuilder(
-                  valueListenable: controller.boletosNotifier,
-                  builder: (context, boletos, child) {
-                    return BoletoList(boletos: boletos);
-                  },
-                ),
-              ],
+                    ],
+                  ),
+                  Divider(height: 1, color: AppColors.stroke, thickness: 1),
+                  ValueListenableBuilder(
+                    valueListenable: controller.boletosNotifier,
+                    builder: (context, boletos, child) {
+                      return BoletoList(boletos: boletos);
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

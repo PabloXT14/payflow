@@ -18,60 +18,64 @@ class _MyBoletosPageState extends State<MyBoletosPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppColors.background,
-      child: Column(
-        children: [
-          // HEADER
-          Stack(
-            children: [
-              Container(
-                height: 40,
-                width: double.infinity,
-                color: AppColors.primary,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: ValueListenableBuilder(
-                  valueListenable: controller.boletosNotifier,
-                  builder: (context, boletos, child) {
-                    return BoletoInfo(totalBoletos: boletos.length);
-                  },
-                ),
-              ),
-            ],
-          ),
+    return SingleChildScrollView(
+      child: Container(
+        padding: const EdgeInsets.only(bottom: 128),
+        color: AppColors.background,
 
-          // MEUS BOLETOS
-          Container(
-            padding: const EdgeInsets.only(left: 24, right: 24, top: 24),
-
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 24,
-
+        child: Column(
+          children: [
+            // HEADER
+            Stack(
               children: [
-                Row(
-                  children: [
-                    Text(
-                      "Meus boletos",
-                      style: AppTextStyles.headingMd.copyWith(
-                        color: AppColors.heading,
-                      ),
-                    ),
-                  ],
+                Container(
+                  height: 40,
+                  width: double.infinity,
+                  color: AppColors.primary,
                 ),
-                Divider(height: 1, color: AppColors.stroke, thickness: 1),
-                ValueListenableBuilder(
-                  valueListenable: controller.boletosNotifier,
-                  builder: (context, boletos, child) {
-                    return BoletoList(boletos: boletos);
-                  },
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: ValueListenableBuilder(
+                    valueListenable: controller.boletosNotifier,
+                    builder: (context, boletos, child) {
+                      return BoletoInfo(totalBoletos: boletos.length);
+                    },
+                  ),
                 ),
               ],
             ),
-          ),
-        ],
+
+            // MEUS BOLETOS
+            Container(
+              padding: const EdgeInsets.only(left: 24, right: 24, top: 24),
+
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 24,
+
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        "Meus boletos",
+                        style: AppTextStyles.headingMd.copyWith(
+                          color: AppColors.heading,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Divider(height: 1, color: AppColors.stroke, thickness: 1),
+                  ValueListenableBuilder(
+                    valueListenable: controller.boletosNotifier,
+                    builder: (context, boletos, child) {
+                      return BoletoList(boletos: boletos);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
