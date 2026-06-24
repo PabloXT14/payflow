@@ -50,7 +50,7 @@ class _InsertBoletoPageState extends State<InsertBoletoPage> {
 
     // ✅ Se o argumento existir, preenche o campo de código de barras
     if (widget.barcode != null) {
-      barcodeTextInputController.text = widget.barcode!;
+      barcodeTextInputController.text = widget.barcode ?? "";
     }
   }
 
@@ -166,7 +166,7 @@ class _InsertBoletoPageState extends State<InsertBoletoPage> {
         secondaryLabel: "Cadastrar",
         secondaryOnPressed: () {
           controller.onSubmit();
-          Navigator.pop(context);
+          Navigator.pushReplacementNamed(context, '/home');
         },
         enableSecondaryColor: true,
       ),

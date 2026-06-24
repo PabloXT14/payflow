@@ -19,7 +19,6 @@ class AppWidget extends StatelessWidget {
     ]);
   }
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -37,11 +36,13 @@ class AppWidget extends StatelessWidget {
         '/splash': (context) => SplashPage(),
         '/login': (context) => LoginPage(),
         '/home': (context) => HomePage(
-          user: ModalRoute.of(context)?.settings.arguments as UserModel,
+          user: ModalRoute.of(context)?.settings.arguments! as UserModel,
         ),
         '/barcode_scanner': (context) => BarcodeScannerPage(),
         '/insert_boleto': (context) => InsertBoletoPage(
-          barcode: ModalRoute.of(context)?.settings.arguments.toString(),
+          barcode: ModalRoute.of(context)?.settings.arguments != null
+              ? ModalRoute.of(context)?.settings.arguments as String
+              : null,
         ),
       },
     );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:payflow/modules/my_boletos/my_boletos_page.dart';
 import 'package:payflow/modules/extract/extract_page.dart';
 import 'package:payflow/shared/models/user_model.dart';
+import 'package:payflow/shared/store/boletos_store.dart';
 
 import 'package:payflow/shared/themes/app_colors.dart';
 import 'package:payflow/shared/themes/app_text_styles.dart';
@@ -20,6 +21,24 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final controller = HomeController();
   final pages = [MyBoletosPage(), ExtractPage()];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _init();
+  }
+
+  Future<void> _init() async {
+    await Future.wait([
+      BoletosStore.instance.load(),
+      // outros stores...
+    ]);
+
+    print(
+      "${BoletosStore.instance.boletos.value.length} boletos carregados do SharedPreferences.",
+    );
+  }
 
   @override
   void didChangeDependencies() {
