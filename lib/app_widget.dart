@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:payflow/shared/models/user_model.dart';
 
 import 'package:payflow/shared/themes/app_colors.dart';
 

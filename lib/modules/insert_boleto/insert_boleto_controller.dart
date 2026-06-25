@@ -61,11 +61,13 @@ class InsertBoletoController {
     return;
   }
 
-  Future<void> onSubmit() async {
+  Future<void> onSubmit(BuildContext context) async {
     final form = formKey.currentState;
 
     if (form != null && form.validate()) {
       await saveBoletoOnStorage();
+
+      Navigator.pushReplacementNamed(context, '/home');
     } else {
       print('Formulário inválido. Verifique os campos e tente novamente.');
     }
