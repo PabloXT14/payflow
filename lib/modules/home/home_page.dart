@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:payflow/modules/my_boletos/my_boletos_page.dart';
 import 'package:payflow/modules/extract/extract_page.dart';
-import 'package:payflow/shared/models/user_model.dart';
 import 'package:payflow/shared/store/boletos_store.dart';
+import 'package:payflow/shared/store/user_store.dart';
 
 import 'package:payflow/shared/themes/app_colors.dart';
 import 'package:payflow/shared/themes/app_text_styles.dart';
@@ -10,9 +11,7 @@ import 'package:payflow/shared/themes/app_text_styles.dart';
 import 'package:payflow/modules/home/home_controller.dart';
 
 class HomePage extends StatefulWidget {
-  final UserModel user;
-
-  const HomePage({super.key, required this.user});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -21,6 +20,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final controller = HomeController();
   final pages = [MyBoletosPage(), ExtractPage()];
+  final user = UserStore.instance.user.value;
 
   @override
   void initState() {
@@ -34,17 +34,6 @@ class _HomePageState extends State<HomePage> {
       BoletosStore.instance.load(),
       // outros stores...
     ]);
-
-    print(
-      "${BoletosStore.instance.boletos.value.length} boletos carregados do SharedPreferences.",
-    );
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    controller.loadBoletosFromStorage();
   }
 
   @override
@@ -66,7 +55,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   children: [
                     TextSpan(
-                      text: widget.user.name,
+                      text: user?.name,
                       style: AppTextStyles.headingMd.copyWith(
                         color: AppColors.white,
                       ),
@@ -85,7 +74,7 @@ class _HomePageState extends State<HomePage> {
                   color: AppColors.background,
                   borderRadius: BorderRadius.circular(5),
                   image: DecorationImage(
-                    image: NetworkImage(widget.user.photoUrl ?? ""),
+                    image: NetworkImage(user?.photoUrl ?? ""),
                   ),
                 ),
               ),

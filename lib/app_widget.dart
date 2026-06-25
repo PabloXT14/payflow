@@ -35,9 +35,7 @@ class AppWidget extends StatelessWidget {
       routes: {
         '/splash': (context) => SplashPage(),
         '/login': (context) => LoginPage(),
-        '/home': (context) => HomePage(
-          user: ModalRoute.of(context)?.settings.arguments! as UserModel,
-        ),
+        '/home': (context) => HomePage(),
         '/barcode_scanner': (context) => BarcodeScannerPage(),
         '/insert_boleto': (context) => InsertBoletoPage(
           barcode: ModalRoute.of(context)?.settings.arguments != null

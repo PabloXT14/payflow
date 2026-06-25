@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:payflow/shared/models/user_model.dart';
+
+import 'package:payflow/shared/store/user_store.dart';
 
 class AuthController {
   final _googleSignIn = GoogleSignIn.instance;
   bool _isGoogleSignInInitialized = false;
   final List<String> _scopes = ['email'];
-
-  UserModel? _user;
 
   Future<void> _initializeGoogleSignIn() async {
     try {
@@ -43,43 +41,25 @@ class AuthController {
     }
   }
 
-  UserModel? get user => _user;
-
   void setUser(BuildContext context, UserModel? user) {
     if (user != null) {
-      storeUser(user);
-
-      _user = user;
-
-      Navigator.pushReplacementNamed(context, "/home", arguments: user);
-
-      return;
+      UserStore.instance.save(user);
+      Navigator.pushReplacementNamed(context, '/home');
+    } else {
+      Navigator.pushReplacementNamed(context, '/login');
     }
-
-    _user = null;
-
-    Navigator.pushReplacementNamed(context, "/login");
-  }
-
-  Future<void> storeUser(UserModel user) async {
-    final instance = await SharedPreferences.getInstance();
-
-    await instance.setString("user", user.toJson());
-
-    return;
   }
 
   Future<void> getStoredUser(BuildContext context) async {
-    final instance = await SharedPreferences.getInstance();
+    await UserStore.instance.load();
 
-    if (!instance.containsKey("user")) {
-      setUser(context, null);
-      return;
+    final storedUser = UserStore.instance.user.value;
+
+    if (storedUser != null) {
+      Navigator.pushReplacementNamed(context, '/home');
+    } else {
+      Navigator.pushReplacementNamed(context, '/login');
     }
-
-    final json = instance.getString("user") as String;
-
-    setUser(context, UserModel.fromJson(json));
 
     return;
   }
