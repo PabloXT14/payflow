@@ -19,7 +19,7 @@ class BoletosStore {
 
   Future<void> add(BoletoModel boleto) async {
     final prefs = await SharedPreferences.getInstance();
-    final boletesUpdated = [...boletos.value, boleto];
+    final boletesUpdated = [boleto, ...boletos.value];
 
     boletos.value =
         boletesUpdated; // notifica automaticamente quem estiver observando
@@ -28,5 +28,13 @@ class BoletosStore {
       'boletos',
       boletesUpdated.map((e) => e.toJson()).toList(),
     );
+  }
+
+  Future<void> clear() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    boletos.value = [];
+
+    await prefs.remove('boletos');
   }
 }

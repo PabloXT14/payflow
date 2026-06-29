@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
             end: Alignment.topCenter,
             colors: [
               AppColors.background,
-              AppColors.background.withValues(alpha: 0.5),
+              AppColors.background.withValues(alpha: 0.8),
               AppColors.background.withValues(alpha: 0.0),
             ],
           ),
@@ -117,7 +117,6 @@ class _HomePageState extends State<HomePage> {
             ),
             GestureDetector(
               onTap: () {
-                // Navigator.pushNamed(context, '/barcode_scanner');
                 Navigator.pushNamed(context, '/barcode_scanner');
               },
               child: Container(

@@ -21,35 +21,35 @@ class _MyBoletosPageState extends State<MyBoletosPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        padding: const EdgeInsets.only(bottom: 128),
-        color: AppColors.background,
+    return Container(
+      color: AppColors.background,
 
-        child: Column(
-          children: [
-            // HEADER
-            Stack(
-              children: [
-                Container(
-                  height: 40,
-                  width: double.infinity,
-                  color: AppColors.primary,
+      child: Column(
+        children: [
+          // HEADER
+          Stack(
+            children: [
+              Container(
+                height: 40,
+                width: double.infinity,
+                color: AppColors.primary,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: SignalBuilder(
+                  builder: (context) {
+                    return BoletoInfo(
+                      totalBoletos: boletosStore.boletos.value.length,
+                    );
+                  },
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: ValueListenableBuilder(
-                    valueListenable: controller.boletosNotifier,
-                    builder: (context, boletos, child) {
-                      return BoletoInfo(totalBoletos: boletos.length);
-                    },
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
+          ),
 
-            // MEUS BOLETOS
-            Container(
+          // MEUS BOLETOS
+          Expanded(
+            child: Container(
               padding: const EdgeInsets.only(left: 24, right: 24, top: 24),
 
               child: Column(
@@ -68,16 +68,18 @@ class _MyBoletosPageState extends State<MyBoletosPage> {
                     ],
                   ),
                   Divider(height: 1, color: AppColors.stroke, thickness: 1),
-                  SignalBuilder(
-                    builder: (context) {
-                      return BoletoList(boletos: boletosStore.boletos.value);
-                    },
+                  Expanded(
+                    child: SignalBuilder(
+                      builder: (context) {
+                        return BoletoList(boletos: boletosStore.boletos.value);
+                      },
+                    ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

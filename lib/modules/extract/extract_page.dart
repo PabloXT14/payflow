@@ -4,6 +4,7 @@ import 'package:payflow/modules/extract/extract_controller.dart';
 import 'package:payflow/shared/themes/app_colors.dart';
 import 'package:payflow/shared/themes/app_text_styles.dart';
 import 'package:payflow/shared/widgets/boleto_list/boleto_list.dart';
+import 'package:signals/signals_hooks.dart';
 
 class ExtractPage extends StatefulWidget {
   const ExtractPage({super.key});
@@ -17,15 +18,14 @@ class _ExtractPageState extends State<ExtractPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        padding: const EdgeInsets.only(bottom: 128),
-        color: AppColors.background,
+    return Container(
+      color: AppColors.background,
 
-        child: Column(
-          children: [
-            // MEUS EXTRATOS
-            Container(
+      child: Column(
+        children: [
+          // MEUS EXTRATOS
+          Expanded(
+            child: Container(
               padding: const EdgeInsets.only(left: 24, right: 24, top: 24),
 
               child: Column(
@@ -42,26 +42,33 @@ class _ExtractPageState extends State<ExtractPage> {
                           color: AppColors.heading,
                         ),
                       ),
-                      Text(
-                        "3 pagos",
-                        style: AppTextStyles.textSm.copyWith(
-                          color: AppColors.body,
-                        ),
+                      SignalBuilder(
+                        builder: (context) {
+                          return Text(
+                            "${controller.paidBoletos.value.length} pagos",
+                            style: AppTextStyles.textSm.copyWith(
+                              color: AppColors.body,
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
                   Divider(height: 1, color: AppColors.stroke, thickness: 1),
-                  ValueListenableBuilder(
-                    valueListenable: controller.boletosNotifier,
-                    builder: (context, boletos, child) {
-                      return BoletoList(boletos: boletos);
-                    },
+                  Expanded(
+                    child: SignalBuilder(
+                      builder: (context) {
+                        return BoletoList(
+                          boletos: controller.paidBoletos.value,
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

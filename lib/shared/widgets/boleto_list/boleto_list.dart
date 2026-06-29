@@ -15,11 +15,15 @@ class BoletoList extends StatefulWidget {
 class _BoletoListState extends State<BoletoList> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      spacing: 32,
-      children: widget.boletos
-          .map((boleto) => BoletoTile(data: boleto))
-          .toList(),
+    return ListView.separated(
+      itemCount: widget.boletos.length,
+      itemBuilder: (context, index) {
+        return BoletoTile(data: widget.boletos[index]);
+      },
+      separatorBuilder: (context, index) {
+        return SizedBox(height: 32);
+      },
+      padding: const EdgeInsets.only(bottom: 128),
     );
   }
 }
