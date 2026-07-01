@@ -30,12 +30,18 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
     if (!mounted) return;
 
     if (controller.status.hasBarcode) {
+      controller.dispose();
+
       Navigator.pushReplacementNamed(
         context,
         "/insert_boleto",
         arguments: controller.status.barcode,
       );
     }
+  }
+
+  Future<void> _navigateToInsertBoletoPage() async {
+    await Navigator.pushReplacementNamed(context, "/insert_boleto");
   }
 
   @override
@@ -91,11 +97,11 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
               bottomNavigationBar: SetLabelButtons(
                 primaryLabel: "Inserir código do boleto ",
                 primaryOnPressed: () {
-                  Navigator.pushNamed(context, "/insert_boleto");
+                  _navigateToInsertBoletoPage();
                 },
                 secondaryLabel: "Adicionar da galeria",
-                secondaryOnPressed: () {
-                  controller.scanWithImagePicker();
+                secondaryOnPressed: () async {
+                  await controller.scanWithImagePicker();
                 },
               ),
             ),
@@ -113,8 +119,8 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
                   primaryLabel: "Escaneie novamente",
                   primaryOnPressed: controller.getAvailableCameras,
                   secondaryLabel: "Digitar código",
-                  secondaryOnPressed: () {
-                    Navigator.pushNamed(context, "/insert_boleto");
+                  secondaryOnPressed: () async {
+                    await _navigateToInsertBoletoPage();
                   },
                 );
               } else {

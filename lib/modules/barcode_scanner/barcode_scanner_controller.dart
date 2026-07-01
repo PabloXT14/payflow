@@ -218,10 +218,10 @@ class BarcodeScannerController {
 
   // ─── lifecycle ───────────────────────────────────────────────────────────
 
-  void dispose() {
+  Future<void> dispose() async {
     _disposed = true;
     _timeoutTimer?.cancel();
-    _disposeCamera();
+    await _disposeCamera();
     _barcodeScanner.close();
     statusNotifier.dispose();
   }
