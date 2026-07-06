@@ -46,44 +46,5 @@ class BoletoTile extends StatelessWidget {
       ),
       titleAlignment: ListTileTitleAlignment.top,
     );
-
-    // return Container(
-    //   width: double.maxFinite,
-    //   child: Row(
-    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //     crossAxisAlignment: CrossAxisAlignment.start,
-    //     children: [
-    //       Column(
-    //         spacing: 6,
-    //         children: [
-    //           Text(
-    //             'Tia maria',
-    //             style: AppTextStyles.headingSm.copyWith(
-    //               color: AppColors.heading,
-    //             ),
-    //           ),
-    //           Text(
-    //             'Vence em 16/11/26',
-    //             style: AppTextStyles.textSm.copyWith(color: AppColors.body),
-    //           ),
-    //         ],
-    //       ),
-    //       Row(
-    //         children: [
-    //           Text(
-    //             'R\$ ',
-    //             style: AppTextStyles.textLg.copyWith(color: AppColors.heading),
-    //           ),
-    //           Text(
-    //             '2.131,33',
-    //             style: AppTextStyles.textLgSemiBold.copyWith(
-    //               color: AppColors.heading,
-    //             ),
-    //           ),
-    //         ],
-    //       ),
-    //     ],
-    //   ),
-    // );
   }
 }

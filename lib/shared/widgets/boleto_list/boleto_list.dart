@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:payflow/shared/models/boleto_model.dart';
 
 import 'package:payflow/shared/widgets/boleto_tile/boleto_tile.dart';
@@ -18,7 +19,15 @@ class _BoletoListState extends State<BoletoList> {
     return ListView.separated(
       itemCount: widget.boletos.length,
       itemBuilder: (context, index) {
-        return BoletoTile(data: widget.boletos[index]);
+        return BoletoTile(data: widget.boletos[index])
+            .animate(delay: (index * 100).ms)
+            .fadeIn()
+            .moveX(
+              begin: 50, // Começa 50px à direita
+              end: 0, // Termina na posição original
+              duration: 400.ms, // Duração da animação
+              curve: Curves.easeOut, // Curva de animação
+            );
       },
       separatorBuilder: (context, index) {
         return SizedBox(height: 32);

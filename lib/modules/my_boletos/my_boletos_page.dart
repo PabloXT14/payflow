@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:signals/signals_hooks.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import 'package:payflow/modules/my_boletos/my_boletos_controller.dart';
 import 'package:payflow/shared/store/boletos_store.dart';
@@ -39,8 +40,16 @@ class _MyBoletosPageState extends State<MyBoletosPage> {
                 child: SignalBuilder(
                   builder: (context) {
                     return BoletoInfo(
-                      totalBoletos: boletosStore.boletos.value.length,
-                    );
+                          totalBoletos: boletosStore.boletos.value.length,
+                        )
+                        .animate()
+                        .fadeIn(duration: 300.ms)
+                        .moveY(
+                          begin: -50, // Começa 50px acima
+                          end: 0, // Termina na posição original
+                          duration: 400.ms, // Duração da animação
+                          curve: Curves.easeOut, // Curva de animação
+                        );
                   },
                 ),
               ),
