@@ -4,6 +4,7 @@ import 'package:payflow/shared/models/boleto_model.dart';
 import 'package:payflow/shared/themes/app_colors.dart';
 import 'package:payflow/shared/themes/app_text_styles.dart';
 import 'package:payflow/shared/utils/format_currency.dart';
+import 'package:payflow/shared/widgets/button/button.dart';
 
 class EditBoletoBottomSheet extends StatefulWidget {
   final BoletoModel data;
@@ -81,6 +82,21 @@ class _EditBoletoBottomSheetState extends State<EditBoletoBottomSheet> {
           ),
 
           // Buttons
+          Container(
+            padding: const EdgeInsets.only(left: 24, right: 24, bottom: 24),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 16,
+              children: [
+                Button(
+                  label: "Ainda não",
+                  onTap: () {},
+                  variant: ButtonVariant.secondary,
+                ),
+                Button(label: "Sim", onTap: () {}),
+              ],
+            ),
+          ),
         ],
       ),
     );
