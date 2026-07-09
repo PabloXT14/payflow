@@ -97,6 +97,37 @@ class _EditBoletoBottomSheetState extends State<EditBoletoBottomSheet> {
               ],
             ),
           ),
+
+          // Delete Button
+          Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(color: AppColors.stroke, width: 1),
+              ),
+            ),
+            child: ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                foregroundColor: AppColors.delete,
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(0),
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                spacing: 8,
+                children: [
+                  Icon(Icons.delete_outline, size: 20, color: AppColors.delete),
+                  Text("Deletar boleto", style: AppTextStyles.textMd),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
