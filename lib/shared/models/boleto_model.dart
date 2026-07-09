@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'package:uuid/uuid.dart';
 
 class BoletoModel {
+  final String id;
   final String? name;
   final String? dueDate;
   final double? value;
@@ -13,7 +15,7 @@ class BoletoModel {
     this.value,
     this.barcode,
     this.paid = false,
-  });
+  }) : id = Uuid().v4();
 
   BoletoModel copyWith({
     String? name,

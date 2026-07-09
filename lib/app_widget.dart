@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:toastification/toastification.dart';
 
 import 'package:payflow/shared/themes/app_colors.dart';
 
@@ -20,28 +21,30 @@ class AppWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Pay Flow',
-      theme: ThemeData(
-        primaryColor: AppColors.primary,
-        appBarTheme: AppBarTheme(
-          // elevation: 0, // Remove the shadow (opcional)
-          backgroundColor: AppColors.primary,
+    return ToastificationWrapper(
+      child: MaterialApp(
+        title: 'Pay Flow',
+        theme: ThemeData(
+          primaryColor: AppColors.primary,
+          appBarTheme: AppBarTheme(
+            // elevation: 0, // Remove the shadow (opcional)
+            backgroundColor: AppColors.primary,
+          ),
         ),
+        debugShowCheckedModeBanner: false,
+        initialRoute: '/splash',
+        routes: {
+          '/splash': (context) => SplashPage(),
+          '/login': (context) => LoginPage(),
+          '/home': (context) => HomePage(),
+          '/barcode_scanner': (context) => BarcodeScannerPage(),
+          '/insert_boleto': (context) => InsertBoletoPage(
+            barcode: ModalRoute.of(context)?.settings.arguments != null
+                ? ModalRoute.of(context)?.settings.arguments as String
+                : null,
+          ),
+        },
       ),
-      debugShowCheckedModeBanner: false,
-      initialRoute: '/splash',
-      routes: {
-        '/splash': (context) => SplashPage(),
-        '/login': (context) => LoginPage(),
-        '/home': (context) => HomePage(),
-        '/barcode_scanner': (context) => BarcodeScannerPage(),
-        '/insert_boleto': (context) => InsertBoletoPage(
-          barcode: ModalRoute.of(context)?.settings.arguments != null
-              ? ModalRoute.of(context)?.settings.arguments as String
-              : null,
-        ),
-      },
     );
   }
 }

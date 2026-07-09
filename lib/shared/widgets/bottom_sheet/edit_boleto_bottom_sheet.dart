@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:payflow/shared/models/boleto_model.dart';
+import 'package:payflow/shared/store/boletos_store.dart';
 
 import 'package:payflow/shared/themes/app_colors.dart';
 import 'package:payflow/shared/themes/app_text_styles.dart';
 import 'package:payflow/shared/utils/format_currency.dart';
+import 'package:payflow/shared/widgets/app_toast/app_toast.dart';
 import 'package:payflow/shared/widgets/button/button.dart';
 
 class EditBoletoBottomSheet extends StatefulWidget {
@@ -16,6 +18,18 @@ class EditBoletoBottomSheet extends StatefulWidget {
 }
 
 class _EditBoletoBottomSheetState extends State<EditBoletoBottomSheet> {
+  Future<void> _handleMarkBoletoAsPaid() async {
+    try {
+      await BoletosStore.instance.markBoletoAsPaid(widget.data);
+
+      AppToast.success(context, "Boleto marcado como pago com sucesso!");
+    } catch (e) {
+      AppToast.error(context, "Erro ao marcar boleto como pago.");
+    } finally {
+      Navigator.pop(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -90,10 +104,17 @@ class _EditBoletoBottomSheetState extends State<EditBoletoBottomSheet> {
               children: [
                 Button(
                   label: "Ainda não",
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
                   variant: ButtonVariant.secondary,
                 ),
-                Button(label: "Sim", onTap: () {}),
+                Button(
+                  label: "Sim",
+                  onTap: () async {
+                    await _handleMarkBoletoAsPaid();
+                  },
+                ),
               ],
             ),
           ),

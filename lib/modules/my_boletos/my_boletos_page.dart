@@ -18,7 +18,6 @@ class MyBoletosPage extends StatefulWidget {
 
 class _MyBoletosPageState extends State<MyBoletosPage> {
   final controller = MyBoletosController();
-  final boletosStore = BoletosStore.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +39,7 @@ class _MyBoletosPageState extends State<MyBoletosPage> {
                 child: SignalBuilder(
                   builder: (context) {
                     return BoletoInfo(
-                          totalBoletos: boletosStore.boletos.value.length,
+                          totalBoletos: controller.unpaidBoletos.value.length,
                         )
                         .animate()
                         .fadeIn(duration: 300.ms)
@@ -80,7 +79,9 @@ class _MyBoletosPageState extends State<MyBoletosPage> {
                   Expanded(
                     child: SignalBuilder(
                       builder: (context) {
-                        return BoletoList(boletos: boletosStore.boletos.value);
+                        return BoletoList(
+                          boletos: controller.unpaidBoletos.value,
+                        );
                       },
                     ),
                   ),
