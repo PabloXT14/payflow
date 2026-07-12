@@ -60,6 +60,8 @@ class _ExtractPageState extends State<ExtractPage> {
                       builder: (context) {
                         return BoletoList(
                           boletos: controller.paidBoletos.value,
+                          emptyListTitle:
+                              'Nenhum boleto pago.\nMarque um boleto como pago para ver aqui.',
                         );
                       },
                     ),

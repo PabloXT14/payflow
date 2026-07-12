@@ -80,6 +80,8 @@ class _MyBoletosPageState extends State<MyBoletosPage> {
                       builder: (context) {
                         return BoletoList(
                           boletos: controller.unpaidBoletos.value,
+                          emptyListTitle:
+                              'Nenhum boleto cadastrado.\n Clique no botão abaixo para adicionar.',
                         );
                       },
                     ),
