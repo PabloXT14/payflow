@@ -14,7 +14,7 @@ class AuthController {
       await _googleSignIn.initialize();
       _isGoogleSignInInitialized = true;
     } catch (error) {
-      print('Erro ao inicializar o Google Sign-In: $error');
+      debugPrint('Erro ao inicializar o Google Sign-In: $error');
     }
   }
 
@@ -36,7 +36,7 @@ class AuthController {
 
       return account;
     } on GoogleSignInException catch (error) {
-      print('Erro ao fazer login com Google: $error');
+      debugPrint('Erro ao fazer login com Google: $error');
       rethrow;
     }
   }

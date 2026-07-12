@@ -68,8 +68,6 @@ class InsertBoletoController {
       await saveBoletoOnStorage();
 
       Navigator.pushReplacementNamed(context, '/home');
-    } else {
-      print('Formulário inválido. Verifique os campos e tente novamente.');
     }
   }
 }

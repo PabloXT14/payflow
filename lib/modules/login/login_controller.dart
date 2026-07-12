@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:payflow/shared/auth/auth_controller.dart';
 import 'package:payflow/shared/models/user_model.dart';
+import 'package:payflow/shared/widgets/app_toast/app_toast.dart';
 
 class LoginController {
   AuthController authController = AuthController();
@@ -19,7 +20,12 @@ class LoginController {
     } catch (error) {
       authController.setUser(context, null);
 
-      print('Erro ao fazer login com Google: $error');
+      debugPrint('Erro ao fazer login com Google: $error');
+
+      AppToast.error(
+        context,
+        "Erro ao fazer login com Google. Tente novamente mais tarde.",
+      );
 
       return;
     }
