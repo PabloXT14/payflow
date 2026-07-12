@@ -116,7 +116,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             GestureDetector(
-              onTap: () {
+              onTap: () async {
                 Navigator.pushNamed(context, '/barcode_scanner');
               },
               child: Container(

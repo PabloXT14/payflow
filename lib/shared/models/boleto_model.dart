@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:uuid/uuid.dart';
 
 class BoletoModel {
+  static const _uuid = Uuid();
+
   final String id;
   final String? name;
   final String? dueDate;
@@ -10,14 +12,16 @@ class BoletoModel {
   final bool? paid;
 
   BoletoModel({
+    String? id,
     this.name,
     this.dueDate,
     this.value,
     this.barcode,
     this.paid = false,
-  }) : id = Uuid().v4();
+  }) : id = id ?? _uuid.v4();
 
   BoletoModel copyWith({
+    String? id,
     String? name,
     String? dueDate,
     double? value,
@@ -25,6 +29,7 @@ class BoletoModel {
     bool? paid,
   }) {
     return BoletoModel(
+      id: id ?? this.id,
       name: name ?? this.name,
       dueDate: dueDate ?? this.dueDate,
       value: value ?? this.value,
@@ -35,6 +40,7 @@ class BoletoModel {
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'name': name,
       'dueDate': dueDate,
       'value': value,
@@ -45,6 +51,7 @@ class BoletoModel {
 
   factory BoletoModel.fromMap(Map<String, dynamic> map) {
     return BoletoModel(
+      id: map['id'],
       name: map['name'],
       dueDate: map['dueDate'],
       value: map['value']?.toDouble(),

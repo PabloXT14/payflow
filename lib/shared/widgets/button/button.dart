@@ -47,7 +47,7 @@ class Button extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       flex: 1,
-      child: Container(
+      child: SizedBox(
         height: 56,
         child: ElevatedButton(
           onPressed: onTap,

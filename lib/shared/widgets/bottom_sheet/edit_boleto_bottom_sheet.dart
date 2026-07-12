@@ -20,7 +20,9 @@ class EditBoletoBottomSheet extends StatefulWidget {
 class _EditBoletoBottomSheetState extends State<EditBoletoBottomSheet> {
   Future<void> _handleMarkBoletoAsPaid() async {
     try {
-      await BoletosStore.instance.markBoletoAsPaid(widget.data);
+      final updatedBoleto = widget.data.copyWith(paid: true);
+
+      await BoletosStore.instance.update(updatedBoleto);
 
       AppToast.success(context, "Boleto marcado como pago com sucesso!");
     } catch (e) {
@@ -28,6 +30,88 @@ class _EditBoletoBottomSheetState extends State<EditBoletoBottomSheet> {
     } finally {
       Navigator.pop(context);
     }
+  }
+
+  Future<void> _handleMarkBoletoAsUnpaid() async {
+    try {
+      final updatedBoleto = widget.data.copyWith(paid: false);
+
+      await BoletosStore.instance.update(updatedBoleto);
+
+      AppToast.success(context, "Boleto marcado como não pago com sucesso!");
+    } catch (e) {
+      AppToast.error(context, "Erro ao marcar boleto como não pago.");
+    } finally {
+      Navigator.pop(context);
+    }
+  }
+
+  Text _unpaidBoletoText() {
+    return Text.rich(
+      textAlign: TextAlign.center,
+      TextSpan(
+        text: "O boleto ",
+        style: AppTextStyles.headingMdRegular.copyWith(
+          color: AppColors.heading,
+        ),
+        children: [
+          TextSpan(
+            text: "${widget.data.name}\n",
+            style: AppTextStyles.headingMd.copyWith(color: AppColors.heading),
+          ),
+          TextSpan(
+            text: "no valor de R\$ ",
+            style: AppTextStyles.headingMdRegular.copyWith(
+              color: AppColors.heading,
+            ),
+          ),
+          TextSpan(
+            text: "${formatCurrency(value: widget.data.value!)}\n",
+            style: AppTextStyles.headingMd.copyWith(color: AppColors.heading),
+          ),
+          TextSpan(
+            text: "foi pago?",
+            style: AppTextStyles.headingMdRegular.copyWith(
+              color: AppColors.heading,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Text _paidBoletoText() {
+    return Text.rich(
+      textAlign: TextAlign.center,
+      TextSpan(
+        text: "Desmarcar o boleto ",
+        style: AppTextStyles.headingMdRegular.copyWith(
+          color: AppColors.heading,
+        ),
+        children: [
+          TextSpan(
+            text: "${widget.data.name}\n",
+            style: AppTextStyles.headingMd.copyWith(color: AppColors.heading),
+          ),
+          TextSpan(
+            text: "no valor de R\$ ",
+            style: AppTextStyles.headingMdRegular.copyWith(
+              color: AppColors.heading,
+            ),
+          ),
+          TextSpan(
+            text: "${formatCurrency(value: widget.data.value!)}\n",
+            style: AppTextStyles.headingMd.copyWith(color: AppColors.heading),
+          ),
+          TextSpan(
+            text: "como pago?",
+            style: AppTextStyles.headingMdRegular.copyWith(
+              color: AppColors.heading,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -57,42 +141,10 @@ class _EditBoletoBottomSheetState extends State<EditBoletoBottomSheet> {
 
           // Text
           Container(
-            padding: const EdgeInsets.symmetric(vertical: 24),
-            child: Text.rich(
-              textAlign: TextAlign.center,
-              TextSpan(
-                text: "O boleto ",
-                style: AppTextStyles.headingMdRegular.copyWith(
-                  color: AppColors.heading,
-                ),
-                children: [
-                  TextSpan(
-                    text: "${widget.data.name}\n",
-                    style: AppTextStyles.headingMd.copyWith(
-                      color: AppColors.heading,
-                    ),
-                  ),
-                  TextSpan(
-                    text: "no valor de R\$ ",
-                    style: AppTextStyles.headingMdRegular.copyWith(
-                      color: AppColors.heading,
-                    ),
-                  ),
-                  TextSpan(
-                    text: "${formatCurrency(value: widget.data.value!)}\n",
-                    style: AppTextStyles.headingMd.copyWith(
-                      color: AppColors.heading,
-                    ),
-                  ),
-                  TextSpan(
-                    text: "foi pago?",
-                    style: AppTextStyles.headingMdRegular.copyWith(
-                      color: AppColors.heading,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
+            child: (widget.data.paid == true)
+                ? _paidBoletoText()
+                : _unpaidBoletoText(),
           ),
 
           // Buttons
@@ -103,7 +155,7 @@ class _EditBoletoBottomSheetState extends State<EditBoletoBottomSheet> {
               spacing: 16,
               children: [
                 Button(
-                  label: "Ainda não",
+                  label: (widget.data.paid == true) ? "Não" : "Ainda não",
                   onTap: () {
                     Navigator.pop(context);
                   },
@@ -112,7 +164,11 @@ class _EditBoletoBottomSheetState extends State<EditBoletoBottomSheet> {
                 Button(
                   label: "Sim",
                   onTap: () async {
-                    await _handleMarkBoletoAsPaid();
+                    if (widget.data.paid == true) {
+                      await _handleMarkBoletoAsUnpaid();
+                    } else {
+                      await _handleMarkBoletoAsPaid();
+                    }
                   },
                 ),
               ],

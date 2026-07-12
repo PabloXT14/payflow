@@ -19,6 +19,7 @@ class BoletosStore {
 
   Future<void> add(BoletoModel boleto) async {
     final prefs = await SharedPreferences.getInstance();
+
     final boletesUpdated = [boleto, ...boletos.value];
 
     boletos.value =
@@ -30,13 +31,14 @@ class BoletosStore {
     );
   }
 
-  Future<void> markBoletoAsPaid(BoletoModel boleto) async {
+  Future<void> update(BoletoModel boleto) async {
     final prefs = await SharedPreferences.getInstance();
 
     final boletesUpdated = boletos.value.map((b) {
       if (b.id == boleto.id) {
-        return b.copyWith(paid: true);
+        return boleto;
       }
+
       return b;
     }).toList();
 
