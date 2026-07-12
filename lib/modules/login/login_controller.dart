@@ -16,9 +16,9 @@ class LoginController {
         photoUrl: response.photoUrl!,
       );
 
-      authController.setUser(context, user);
+      await authController.setUser(context, user);
     } catch (error) {
-      authController.setUser(context, null);
+      await authController.setUser(context, null);
 
       debugPrint('Erro ao fazer login com Google: $error');
 

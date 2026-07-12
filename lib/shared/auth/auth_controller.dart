@@ -41,9 +41,9 @@ class AuthController {
     }
   }
 
-  void setUser(BuildContext context, UserModel? user) {
+  Future<void> setUser(BuildContext context, UserModel? user) async {
     if (user != null) {
-      UserStore.instance.save(user);
+      await UserStore.instance.save(user);
       Navigator.pushReplacementNamed(context, '/home');
     } else {
       Navigator.pushReplacementNamed(context, '/login');

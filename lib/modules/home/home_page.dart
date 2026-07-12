@@ -9,6 +9,7 @@ import 'package:payflow/shared/themes/app_colors.dart';
 import 'package:payflow/shared/themes/app_text_styles.dart';
 
 import 'package:payflow/modules/home/home_controller.dart';
+import 'package:payflow/shared/widgets/modals/logout_modal.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -67,14 +68,22 @@ class _HomePageState extends State<HomePage> {
                 "Mantenha suas contas em dia",
                 style: AppTextStyles.textSm.copyWith(color: AppColors.box),
               ),
-              trailing: Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: AppColors.background,
-                  borderRadius: BorderRadius.circular(5),
-                  image: DecorationImage(
-                    image: NetworkImage(user?.photoUrl ?? ""),
+              trailing: GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => LogoutModal(),
+                  );
+                },
+                child: Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: AppColors.background,
+                    borderRadius: BorderRadius.circular(5),
+                    image: DecorationImage(
+                      image: NetworkImage(user?.photoUrl ?? ""),
+                    ),
                   ),
                 ),
               ),

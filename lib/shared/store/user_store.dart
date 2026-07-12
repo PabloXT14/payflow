@@ -1,3 +1,4 @@
+import 'package:payflow/shared/store/boletos_store.dart';
 import 'package:signals/signals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,18 +12,31 @@ class UserStore {
   final user = signal<UserModel?>(null);
 
   Future<void> load() async {
-    final instance = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
 
-    final json = instance.getString("user") as String;
+    if (!prefs.containsKey("user")) {
+      return;
+    }
+
+    final json = prefs.getString("user") as String;
 
     user.value = UserModel.fromJson(json);
   }
 
   Future<void> save(UserModel newUser) async {
-    final instance = await SharedPreferences.getInstance();
-
-    await instance.setString("user", newUser.toJson());
+    final prefs = await SharedPreferences.getInstance();
 
     user.value = newUser;
+
+    await prefs.setString("user", newUser.toJson());
+  }
+
+  Future<void> clear() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    await prefs.remove("user");
+    await BoletosStore.instance.clear();
+
+    user.value = null;
   }
 }
