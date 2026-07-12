@@ -7,6 +7,7 @@ import 'package:payflow/shared/themes/app_text_styles.dart';
 import 'package:payflow/shared/utils/format_currency.dart';
 import 'package:payflow/shared/widgets/app_toast/app_toast.dart';
 import 'package:payflow/shared/widgets/button/button.dart';
+import 'package:payflow/shared/widgets/modals/delete_boleto_modal.dart';
 
 class EditBoletoBottomSheet extends StatefulWidget {
   final BoletoModel data;
@@ -41,6 +42,17 @@ class _EditBoletoBottomSheetState extends State<EditBoletoBottomSheet> {
       AppToast.success(context, "Boleto marcado como não pago com sucesso!");
     } catch (e) {
       AppToast.error(context, "Erro ao marcar boleto como não pago.");
+    } finally {
+      Navigator.pop(context);
+    }
+  }
+
+  Future<void> _handleDeleteBoleto() async {
+    try {
+      await BoletosStore.instance.remove(widget.data.id);
+      AppToast.success(context, "Boleto deletado com sucesso!");
+    } catch (e) {
+      AppToast.error(context, "Erro ao deletar o boleto.");
     } finally {
       Navigator.pop(context);
     }
@@ -184,7 +196,17 @@ class _EditBoletoBottomSheetState extends State<EditBoletoBottomSheet> {
               ),
             ),
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return DeleteBoletoModal(
+                      data: widget.data,
+                      onConfirm: _handleDeleteBoleto,
+                    );
+                  },
+                );
+              },
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 foregroundColor: AppColors.delete,

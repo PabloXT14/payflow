@@ -50,6 +50,19 @@ class BoletosStore {
     );
   }
 
+  Future<void> remove(String id) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final boletesUpdated = boletos.value.where((b) => b.id != id).toList();
+
+    boletos.value = boletesUpdated;
+
+    await prefs.setStringList(
+      'boletos',
+      boletesUpdated.map((e) => e.toJson()).toList(),
+    );
+  }
+
   Future<void> clear() async {
     final prefs = await SharedPreferences.getInstance();
 
