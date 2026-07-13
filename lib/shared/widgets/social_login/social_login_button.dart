@@ -7,13 +7,18 @@ import 'package:payflow/shared/themes/app_text_styles.dart';
 
 class SocialLoginButton extends StatelessWidget {
   final VoidCallback onTap;
+  final bool isLoading;
 
-  const SocialLoginButton({super.key, required this.onTap});
+  const SocialLoginButton({
+    super.key,
+    required this.onTap,
+    this.isLoading = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: isLoading ? null : onTap,
       child: Container(
         height: 56,
         decoration: BoxDecoration(
@@ -38,15 +43,26 @@ class SocialLoginButton extends StatelessWidget {
             ),
             Expanded(
               flex: 1,
-              child: Container(
-                alignment: Alignment.center,
-                child: Text(
-                  "Entrar com Google",
-                  style: AppTextStyles.textMd.copyWith(
-                    color: AppColors.secondary,
-                  ),
-                ),
-              ),
+              child: isLoading
+                  ? Center(
+                      child: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          color: AppColors.primary,
+                          strokeWidth: 4,
+                        ),
+                      ),
+                    )
+                  : Container(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Entrar com Google",
+                        style: AppTextStyles.textMd.copyWith(
+                          color: AppColors.secondary,
+                        ),
+                      ),
+                    ),
             ),
           ],
         ),
