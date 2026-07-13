@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:payflow/shared/themes/app_colors.dart';
+import 'package:payflow/shared/widgets/error_screen/error_screen.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 
@@ -30,9 +31,7 @@ class _AppFirebaseState extends State<AppFirebase> {
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return MaterialApp(
-            home: Scaffold(
-              body: Center(child: Text('Erro ao inicializar o Firebase')),
-            ),
+            home: ErrorScreen(message: 'Erro ao inicializar o Firebase'),
           );
         }
 
