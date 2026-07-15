@@ -86,12 +86,12 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
               ),
               body: Column(
                 children: [
-                  Expanded(child: Container(color: AppColors.black)),
+                  Expanded(child: Container(color: AppColors.body)),
                   Expanded(
                     flex: 2,
                     child: Container(color: Colors.transparent),
                   ),
-                  Expanded(child: Container(color: AppColors.black)),
+                  Expanded(child: Container(color: AppColors.body)),
                 ],
               ),
               bottomNavigationBar: SetLabelButtons(
