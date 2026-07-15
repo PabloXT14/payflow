@@ -3,7 +3,5 @@ class HomeController {
 
   void changePage(int index) {
     currentPageIndex = index;
-
-    print(currentPageIndex);
   }
 }
